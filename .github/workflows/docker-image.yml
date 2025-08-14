@@ -79,8 +79,7 @@ jobs:
               -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
               -e JWT_EXPIRE=${{ secrets.JWT_EXPIRE }} \
               -p 8080:8080 \
-              ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest
-
+              ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest || exit 1
 
             docker run -d --name soltech-frontend \
               -p 5173:5173 \
