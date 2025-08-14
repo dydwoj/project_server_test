@@ -39,7 +39,7 @@ jobs:
       - name: Build frontend
         working-directory: soltech/project/frontend
         run: |
-          npm ci
+          npm install
           npm run build
 
       # Build & Push Frontend
