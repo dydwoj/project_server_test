@@ -50,7 +50,7 @@ jobs:
             -f soltechreact/Dockerfile soltechreact
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest
 
-      # 4. EC2 접속 후 배포
+      # EC2 접속 후 배포
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -67,20 +67,6 @@ jobs:
             docker rm soltech-backend || true
             docker rm soltech-frontend || true
 
-            docker run --rm --name soltech-backend \
-              -e SPRING_PROFILES_ACTIVE=prod \
-              -e DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }} \
-              -e DB_NAME=${{ secrets.DB_NAME }} \
-              -e SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }} \
-              -e SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }} \
-              -e SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }} \
-              -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
-              -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
-              -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
-              -e JWT_EXPIRE=${{ secrets.JWT_EXPIRE }} \
-              -p 8080:8080 \
-              ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest || exit 1
+            docker run --rm --name soltech-backend -e SPRING_PROFILES_ACTIVE=prod -e DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }} -e DB_NAME=${{ secrets.DB_NAME }} -e SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }} -e SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }} -e SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }} -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} -e JWT_SECRET=${{ secrets.JWT_SECRET }} -e JWT_EXPIRE=${{ secrets.JWT_EXPIRE }} -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest || exit 1
 
-            docker run -d --name soltech-frontend \
-              -p 5173:5173 \
-              ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest
+            docker run -d --name soltech-frontend -p 5173:5173 ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest
