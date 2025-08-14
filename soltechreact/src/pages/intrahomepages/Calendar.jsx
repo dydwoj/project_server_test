@@ -4,7 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { useEffect, useState } from "react";
-import "../../css/intrahome.css";
+import "../../css/IntraHome.css";
 import dayjs from "dayjs";
 // import CalendarView from "../CalendarView";
 
