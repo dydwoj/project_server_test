@@ -67,7 +67,7 @@ jobs:
             docker rm soltech-backend || true
             docker rm soltech-frontend || true
 
-            docker run -d --name soltech-backend \
+            docker run --rm --name soltech-backend \
               -e SPRING_PROFILES_ACTIVE=prod \
               -e DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }} \
               -e DB_NAME=${{ secrets.DB_NAME }} \
@@ -80,6 +80,7 @@ jobs:
               -e JWT_EXPIRE=${{ secrets.JWT_EXPIRE }} \
               -p 8080:8080 \
               ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest
+
 
             docker run -d --name soltech-frontend \
               -p 5173:5173 \
