@@ -2,7 +2,7 @@ name: Build and Push Docker Images
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -20,10 +20,12 @@ jobs:
 
       - name: Build & Push Backend
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest -f project/Dockerfile project
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest \
+            -f soltech/project/Dockerfile soltech/project
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest
 
       - name: Build & Push Frontend
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest -f project/frontend/Dockerfile project/frontend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest \
+            -f soltech/project/frontend/Dockerfile soltech/project/frontend
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest
