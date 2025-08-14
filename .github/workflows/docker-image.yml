@@ -39,6 +39,7 @@ jobs:
       - name: Build frontend
         working-directory: soltech/project/frontend
         run: |
+          cd soltechreact
           npm install
           npm run build
 
