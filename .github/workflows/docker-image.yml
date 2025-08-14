@@ -36,6 +36,12 @@ jobs:
             -f soltech/project/Dockerfile soltech/project
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest
 
+      - name: Build frontend
+        working-directory: soltech/project/frontend
+        run: |
+          npm ci
+          npm run build
+
       # Build & Push Frontend
       - name: Build & Push Frontend Docker Image
         run: |
