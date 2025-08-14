@@ -2,14 +2,15 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+# yarn.lock도 같이 복사해서 lockfile 기반 설치
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN npm run build
+RUN yarn build
 
-RUN npm i -g serve
+RUN yarn global add serve
 
 EXPOSE 5173
 
