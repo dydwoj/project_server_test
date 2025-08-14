@@ -21,9 +21,7 @@ services:
       retries: 5
 
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: dydwoj/soltech-backend:latest # Docker Hub에서 pull
     container_name: soltech-backend
     depends_on:
       mysql:
@@ -42,9 +40,7 @@ services:
     restart: always
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: dydwoj/soltech-frontend:latest # Docker Hub에서 pull
     container_name: soltech-frontend
     depends_on:
       - backend
