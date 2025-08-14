@@ -1,7 +1,5 @@
 import api from "./axios";
 
-const BASE_URL = import.meta.env.API_SERVER_HOST;
-
 // 로그인 api
 export const login = async ({ loginType, email, empNo, password, jobNo, deptNo, eEmail, eName }) => {
   const payload = {
@@ -19,7 +17,7 @@ export const login = async ({ loginType, email, empNo, password, jobNo, deptNo, 
     payload.empNo = empNo;
   }
 
-  const res = await api.post(`${BASE_URL}/api/auth/login`, payload);
+  const res = await api.post(`/api/auth/login`, payload);
   return res.data; // 여기서 accessToken, refreshToken 포함된 응답 객체 리턴됨
 };
 
@@ -32,6 +30,6 @@ export const logoutMember = () => {
 
 // 회원가입 api
 export const registerMember = async (memberData) => {
-  const res = await api.post(`${BASE_URL}/api/auth/member/signup`, memberData);
+  const res = await api.post(`/api/auth/member/signup`, memberData);
   return res.data;
 };

@@ -58,15 +58,28 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest
-
             docker stop soltech-backend || true
             docker stop soltech-frontend || true
-
             docker rm soltech-backend || true
             docker rm soltech-frontend || true
 
-            docker run --rm --name soltech-backend -e SPRING_PROFILES_ACTIVE=prod -e DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }} -e DB_NAME=${{ secrets.DB_NAME }} -e SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }} -e SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }} -e SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }} -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} -e JWT_SECRET=${{ secrets.JWT_SECRET }} -e JWT_EXPIRE=${{ secrets.JWT_EXPIRE }} -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest || exit 1
+            docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest || true
+            docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest || true
 
-            docker run -d --name soltech-frontend -p 5173:5173 ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest
+
+            echo "${{ secrets.DOCKER_ENV_DB }}" > /home/ubuntu/db.env
+            echo "${{ secrets.DOCKER_ENV_GOOGLE }}" > /home/ubuntu/google.env
+            echo "${{ secrets.DOCKER_ENV_JWT }}" > /home/ubuntu/jwt.env
+
+            docker run -d --name soltech-backend \
+              --env-file /home/ubuntu/db.env \
+              --env-file /home/ubuntu/google.env \
+              --env-file /home/ubuntu/jwt.env \
+              -p 8080:8080 \
+              ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest \
+              --spring.profiles.active=prod
+
+            docker run -d --name soltech-frontend -p 5173:5173 \
+              ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest
