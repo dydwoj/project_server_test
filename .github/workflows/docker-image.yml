@@ -18,13 +18,26 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build & Push Backend
+      # Backend Maven Build
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build backend with Maven
+        working-directory: soltech/project
+        run: mvn -B package -DskipTests
+
+      # Build & Push Backend
+      - name: Build & Push Backend Docker Image
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest \
             -f soltech/project/Dockerfile soltech/project
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest
 
-      - name: Build & Push Frontend
+      # Build & Push Frontend
+      - name: Build & Push Frontend Docker Image
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest \
             -f soltech/project/frontend/Dockerfile soltech/project/frontend
