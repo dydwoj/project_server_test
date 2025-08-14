@@ -50,6 +50,16 @@ jobs:
             -f soltechreact/Dockerfile soltechreact
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest
 
+      # SQL 파일 EC2로 업로드
+      - name: Upload insert-sql to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "soltech/project/insert-sql/*"
+          target: "/home/ubuntu/insert-sql"
+
       # EC2 접속 후 배포
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -80,6 +90,12 @@ jobs:
               -p 8080:8080 \
               ${{ secrets.DOCKERHUB_USERNAME }}/soltech-backend:latest \
               --spring.profiles.active=prod
+
+            sleep 10
+
+            docker exec -i mysql mysql -u root -p${{ secrets.DB_ROOT_PASSWORD }} ${{ secrets.DB_NAME }} < /home/ubuntu/insert-sql/01_job_rank_seed_test.sql
+            docker exec -i mysql mysql -u root -p${{ secrets.DB_ROOT_PASSWORD }} ${{ secrets.DB_NAME }} < /home/ubuntu/insert-sql/02_department_seed_test.sql
+            docker exec -i mysql mysql -u root -p${{ secrets.DB_ROOT_PASSWORD }} ${{ secrets.DB_NAME }} < /home/ubuntu/insert-sql/03_employee_seed_test.sql
 
             docker run -d --name soltech-frontend -p 5173:5173 \
               ${{ secrets.DOCKERHUB_USERNAME }}/soltech-frontend:latest
