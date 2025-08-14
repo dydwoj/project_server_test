@@ -40,8 +40,8 @@ jobs:
       - name: Build frontend
         working-directory: soltechreact
         run: |
-          npm install
-          npm run build
+          yarn install --frozen-lockfile
+          yarn build
 
       # Build & Push Frontend
       - name: Build & Push Frontend Docker Image
