@@ -60,7 +60,7 @@ jobs:
           source: "soltech/project/insert-sql/*"
           target: "/home/ubuntu/insert-sql"
 
-      # EC2 접속 후 배포
+      # EC2 접속 후 배포 (SQL 문도 같이)
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
