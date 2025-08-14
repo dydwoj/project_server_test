@@ -135,3 +135,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 soltech/project/src/main/resources/application-oauth.properties
+soltech.pem
+soltechmiddle.pem
